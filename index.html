@@ -28,8 +28,11 @@ const silentSoundPlayer = new Audio();
 silentSoundPlayer.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
 
 const demoSoundPlayer = new Audio();
-demoSoundPlayer.src = 'data:audio/mpeg;base64,/+MYxAAEaAIEeUAQAgBgNgP/////KQQ/////Lvrg+lcWYHgtjadzsbTq+yREu495tq9c6v/7vt/of7mna9v6/btUnU17Jun9/+MYxCkT26KW+YGBAj9v6vUh+zab//v/96C3/pu6H+pv//r/ycIIP4pcWWTRBBBAMXgNdbRaABQAAABRWKwgjQVX0ECmrb///+MYxBQSM0sWWYI4A++Z/////////////0rOZ3MP//7H44QEgxgdvRVMXHZseL//540B4JAvMPEgaA4/0nHjxLhRgAoAYAgA/+MYxAYIAAJfGYEQAMAJAIAQMAwX936/q/tWtv/2f/+v//6v/+7qTEFNRTMuOTkuNVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV';
-
+demoSoundPlayer.src = 'https://download.samplelib.com/mp3/sample-3s.mp3';
+document.querySelector('body').addEventListener('click', () => {
+		document.querySelector('body').style.backgroundColor = 'green';
+    console.log('body clicked')
+});
 document.querySelector('#silent_sound').addEventListener('click', () => {
 	silentSoundPlayer.play().then(() => {
   	console.log('silent sound playback completed')
@@ -65,20 +68,16 @@ document.querySelector('#demo_sound').addEventListener('click', () => {
   socket.onmessage = function(event) {
 	    socketStatus.innerHTML += 'Received: ' + event.data;
   };
-  sec = 10;
-  setInterval(() => {
-    sec--;
-  	document.querySelector('#countdown').innerText = Math.max(sec,0)
-    if (sec === 0) {
+
+  setTimeout(() => {
+      document.querySelector('#countdown').innerText = '0'
       console.log('play sound after 10 seconds')
     	demoSoundPlayer.play().then(() => {
         console.log('demo sound playback completed')
       }, (error) => {
         console.error('error playing demo sound', error)
       })
-    }
-  }, 1000)
-
+  }, 10 * 1e3)
 
 </script>
 </body>
