@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>demoBackgroundPlaybackSound</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <h3>
+  Minimize the web page and wait for the playback to start ( in <span id='countdown'>10</span> seconds)
+  </h3>
+  <ul>
+    <li>Expected:</li>
+    <li>Sound will be heard while tab is in background</li>
+    <li>Actual:</li>
+    <li>Sound is not heard</li>
+  </ul>
+  <input type="button" id="silent_sound" value="play silent sound"/>
+  <input type="button" id="demo_sound" value="play demo sound"/>
+  <pre id='socket_log'>logs </pre>
+<script type="text/javascript">
+
+
+const silentSoundPlayer = new Audio();
+silentSoundPlayer.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+
+const demoSoundPlayer = new Audio();
+demoSoundPlayer.src = 'data:audio/mpeg;base64,/+MYxAAEaAIEeUAQAgBgNgP/////KQQ/////Lvrg+lcWYHgtjadzsbTq+yREu495tq9c6v/7vt/of7mna9v6/btUnU17Jun9/+MYxCkT26KW+YGBAj9v6vUh+zab//v/96C3/pu6H+pv//r/ycIIP4pcWWTRBBBAMXgNdbRaABQAAABRWKwgjQVX0ECmrb///+MYxBQSM0sWWYI4A++Z/////////////0rOZ3MP//7H44QEgxgdvRVMXHZseL//540B4JAvMPEgaA4/0nHjxLhRgAoAYAgA/+MYxAYIAAJfGYEQAMAJAIAQMAwX936/q/tWtv/2f/+v//6v/+7qTEFNRTMuOTkuNVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV';
+
+document.querySelector('#silent_sound').addEventListener('click', () => {
+	silentSoundPlayer.play().then(() => {
+  	console.log('silent sound playback completed')
+  }, (error) => {
+    console.error('error playing silent sound', error)
+  })
+});
+
+document.querySelector('#demo_sound').addEventListener('click', () => {
+	demoSoundPlayer.play().then(() => {
+  	console.log('demo sound playback completed')
+  }, (error) => {
+    console.error('error playing demo sound', error)
+  })
+});
+
+ let socket = new WebSocket('wss://ws.postman-echo.com/raw');
+ let socketStatus = document.querySelector('#socket_log');
+  // Handle any errors that occur.
+  socket.onerror = function(error) {
+    console.log('WebSocket Error: ' + error);
+     socketStatus.innerHTML += 'Error: ' + error.url;
+  };
+
+
+  // Show a connected message when the WebSocket is opened.
+  socket.onopen = function(event) {
+    socketStatus.innerHTML += 'Connected to: ' + event.currentTarget.url;
+  };
+
+
+  // Handle messages sent by the server.
+  socket.onmessage = function(event) {
+	    socketStatus.innerHTML += 'Received: ' + event.data;
+  };
+  sec = 10;
+  setInterval(() => {
+    sec--;
+  	document.querySelector('#countdown').innerText = Math.max(sec,0)
+    if (sec === 0) {
+      console.log('play sound after 10 seconds')
+    	demoSoundPlayer.play().then(() => {
+        console.log('demo sound playback completed')
+      }, (error) => {
+        console.error('error playing demo sound', error)
+      })
+    }
+  }, 1000)
+
+
+</script>
+</body>
+</html>
