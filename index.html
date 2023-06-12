@@ -31,13 +31,16 @@
     </p>
     <div id="socket_log"></div>
     <script>
+    //load our demo sound
+    const demoSoundPlayer = new Audio();
+    demoSoundPlayer.src = 'https://download.samplelib.com/mp3/sample-3s.mp3';
+    demoSoundPlayer.load();
     // Connection to a demo broadcast channel
     const bc = new BroadcastChannel("call-manager-demo");
     bc.onmessage = (event) => {
       console.log('got event', event.data);
       if(event.data === 'play-sound') {
-        const demoSoundPlayer = new Audio();
-        demoSoundPlayer.src = 'https://download.samplelib.com/mp3/sample-3s.mp3';
+        
         demoSoundPlayer.play();
       }
     };
