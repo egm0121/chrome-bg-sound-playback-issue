@@ -29,6 +29,7 @@ silentSoundPlayer.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAR
 
 const demoSoundPlayer = new Audio();
 demoSoundPlayer.src = 'https://download.samplelib.com/mp3/sample-3s.mp3';
+demoSoundPlayer.onerror = (err) => console.error(err, 'demoSoundPlayer.onerror triggered'); 
 document.querySelector('body').addEventListener('click', () => {
 		document.querySelector('body').style.backgroundColor = 'green';
     console.log('body clicked')
@@ -68,16 +69,18 @@ document.querySelector('#demo_sound').addEventListener('click', () => {
   socket.onmessage = function(event) {
 	    socketStatus.innerHTML += 'Received: ' + event.data;
   };
-
-  setTimeout(() => {
-      document.querySelector('#countdown').innerText = '0'
-      console.log('play sound after 10 seconds')
-    	demoSoundPlayer.play().then(() => {
-        console.log('demo sound playback completed')
-      }, (error) => {
-        console.error('error playing demo sound', error)
-      })
-  }, 10 * 1e3)
+  // Connection to a demo broadcast channel
+  const bc = new BroadcastChannel("call-manager-demo");
+  bc.onmessage = (event) => {
+    console.log('got event', event.data, (new Date()).toISOString());
+    if(event.data === 'play-sound') {
+      demoSoundPlayer.play().then(() => {
+  	console.log('demo sound playback completed')
+  	}, (error) => {
+    	console.error('error playing demo sound', error)
+  	})
+    }
+  };
 
 </script>
 </body>
