@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Sample Application</title>
+    <title>Repro example - cannot play audio from bg tab with active WS connection</title>
   </head>
   <body>
-    <h2>Sample Application</h2>
-    <textarea>1. focus me once to activate page</textarea>
-    2. open another tab and go to: 'https://egm0121.github.io/'
-    4. Open the DevTools and paste the following in the console : 
-    <pre>(new BroadcastChannel("call-manager-demo")).postMessage('play-sound')</pre>
-    
+    <h2>Repro example - cannot play audio from bg tab with active WS connection</h2>
+    <h3>STEPS</h3>
+    <ol>
+    <li>
+      Focus the textarea once to make sure the page has been interacted with (required for programmatic sound playback)
+    <li>
+    <textarea>FOCUS ME!</textarea>
+    <li>
+      Open another tab and go to: 'https://egm0121.github.io/'
+    </li>
+    <li>
+      Open the DevTools and paste the following in the console : 
+      <pre>(new BroadcastChannel("call-manager-demo")).postMessage('play-sound')</pre>
+    </li>
+    </ol>
     <p>
       <b>Expected:</b> sound starts to play immediately even in tab is not visible
     </p>
     <p>
       <b>Actual:</b> sound does not play until tab is selected and foregrounded
+    </p>
+    <p>
+      Note that this happens only the first time that the page is loaded on a specific tab, 
+      to reproduce the issue, please make sure you open both tabs in a new chrome window ( cmd+N )
     </p>
     <div id="socket_log"></div>
     <script>
