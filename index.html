@@ -5,7 +5,18 @@
   </head>
   <body>
     <h2>Sample Application</h2>
-    <textarea>focus me once to activate page</textarea>
+    <textarea>1. focus me once to activate page</textarea>
+    2. open another tab and go to: 'https://egm0121.github.io/'
+    4. Open the DevTools and paste the following in the console : 
+    <pre>(new BroadcastChannel("call-manager-demo")).postMessage('play-sound')</pre>
+    
+    <p>
+      <b>Expected:</b> sound starts to play immediately even in tab is not visible
+    </p>
+    <p>
+      <b>Actual:</b> sound does not play until tab is selected and foregrounded
+    </p>
+    <div id="socket_log"></div>
     <script>
     // Connection to a demo broadcast channel
     const bc = new BroadcastChannel("call-manager-demo");
@@ -17,6 +28,20 @@
         demoSoundPlayer.play();
       }
     };
+    
+     let socket = new WebSocket('wss://ws.postman-echo.com/raw');
+     let socketStatus = document.querySelector('#socket_log');
+      // Handle any errors that occur.
+      socket.onerror = function(error) {
+        console.log('WebSocket Error: ' + error);
+         socketStatus.innerHTML += 'Error: ' + error.url;
+      };
+
+
+      // Show a connected message when the WebSocket is opened.
+      socket.onopen = function(event) {
+        socketStatus.innerHTML += 'Connected to: ' + event.currentTarget.url;
+      };
     </script>
   </body>
 </html>
